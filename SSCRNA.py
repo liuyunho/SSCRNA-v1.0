@@ -7,7 +7,6 @@ import time
 from collections import Counter
 import threading
 import queue
-#36 changed
 def Read_Gene_Table(FILEPATH):
     cell_profiles={}
     gene_names=[]
@@ -24,7 +23,6 @@ def Read_Gene_Table(FILEPATH):
             else:
                 cell_profiles[cell_a[i-1]].append(int(float((sub_a[i]))))
     return cell_profiles,gene_names
-#1 split to two function 1
 def read_names_from_file(FILENAME):
     fr = open(FILENAME, 'r')
     names=[] #define seq name list
@@ -32,26 +30,22 @@ def read_names_from_file(FILENAME):
         if line.startswith('>'): #decide if the start
             names.append(line.replace('>','').replace('\n',''))
     return names
-#31
 def split_GENENAMES(GENE_NAMES):
     gene_infos=[]
     for each in GENE_NAMES:
         gene_infos.append(each.split('|'))
     return gene_infos
-#32
 def del_version(GENE_LIST):
     gene_list=[]
     strinfo = re.compile(r'\..*')
     for each in GENE_LIST:
         gene_list.append(strinfo.sub('',each))
     return gene_list
-#33
 def get_iterm_list(GENE_INFOS,INDEX):
     Iterm_List=[]
     for each in GENE_INFOS:
         Iterm_List.append(each[INDEX-1])
     return Iterm_List
-#34 changed
 def get_gene_index(GENE_LIST,SEL_GENES):
     Gene_Index=[]
     for each in SEL_GENES:
@@ -60,7 +54,6 @@ def get_gene_index(GENE_LIST,SEL_GENES):
         else:
             Gene_Index.append('no')
     return Gene_Index
-#1 split to two function 2
 def read_seqs_from_file(FILENAME,SEL_INDEX):
     fr = open(FILENAME, 'r')
     index=(-1) #cause this part index start with 0
@@ -78,14 +71,12 @@ def read_seqs_from_file(FILENAME,SEL_INDEX):
         if each!='no':
             seqs.append(seq_dic[each])
     return seqs
-#add 1
 def get_sel_gene_name(GENE_LIST,SEL_INDEX):
     names=[]
     for each in SEL_INDEX:
         if each!='no':
             names.append(GENE_LIST[each])
     return names
-#37 changed
 def get_map_gene_profile(CELL_PROFILES,SEL_INDEX):
     index=[]
     CELL_PROFILES_new={}
@@ -95,7 +86,6 @@ def get_map_gene_profile(CELL_PROFILES,SEL_INDEX):
     for each in CELL_PROFILES:
         CELL_PROFILES_new[each]=[CELL_PROFILES[each][each_i] for each_i in index]
     return CELL_PROFILES_new
-#2 changed
 def get_fragment_count(Real_Profile_in_a_Cell,Seq_Sequences):
     length_list=[] #a list contain the seqs' length
     for each in Seq_Sequences:
@@ -103,13 +93,11 @@ def get_fragment_count(Real_Profile_in_a_Cell,Seq_Sequences):
     length_ratio=[round(each/min(length_list)) for each in length_list] #get the length ratio,means the shortest length as 1
     fragment_count=list(map(lambda a:a[0]*a[1],zip(length_ratio,Real_Profile_in_a_Cell))) #the production of length ratio and real profile
     return fragment_count
-#4
 def random_select(LENGTH,FRAG_SIZE):
     if LENGTH>FRAG_SIZE:
         return random.choice(range(1,(LENGTH-FRAG_SIZE+1)))
     else: #if length == frag size, range function return null list
         return 1 #if length is samller than length, then return the first position
-#5 changed
 def break_seq(LIBRARY_PATH,CELL_INDEX,Real_Profile_in_a_Cell,SEQ_NAMES,SEQ_SEQUENCES,Fragment_Size=250,Fragment_Dv=25):
     correct_fragment_count_in_a_cell=get_fragment_count(Real_Profile_in_a_Cell,SEQ_SEQUENCES) #correct fragment count by seqs' length
     fr=open(LIBRARY_PATH+str(CELL_INDEX),'w')
@@ -156,17 +144,14 @@ def break_seq2(LIBRARY_PATH,CELL_INDEX,Real_Profile_in_a_Cell,SEQ_NAMES,SEQ_SEQU
                 fr.writelines(['\n'])
             else:
                 fr.writelines([';'])
-#6 change
 def multi_cell(LIBRARY_PATH,Cell_Profile_List,SEQ_NAMES,SEQ_SEQUENCES,Fragment_Size=250,Fragment_Dv=25):
     for i in range(len(Cell_Profile_List)): #for every cell fragment profile, we get the fragment list in a cell and combine into fragment list
         break_seq(LIBRARY_PATH,(i+1),Cell_Profile_List[i],SEQ_NAMES,SEQ_SEQUENCES,Fragment_Size,Fragment_Dv)
 def multi_cell2(LIBRARY_PATH,Cell_Profile_List,SEQ_NAMES,SEQ_SEQUENCES,Delete_Size=50,Delete_Dv=25):
     for i in range(len(Cell_Profile_List)): #for every cell fragment profile, we get the fragment list in a cell and combine into fragment list
         break_seq2(LIBRARY_PATH,(i+1),Cell_Profile_List[i],SEQ_NAMES,SEQ_SEQUENCES,Delete_Size,Delete_Dv)
-#add 2
 def get_line_context(file_path, line_number):
     return linecache.getline(file_path, line_number).strip()
-#add 3
 def split_gene_fragment(GENE_Fragment):
     GENE_Fragment=GENE_Fragment.split('\t')
     if GENE_Fragment[1]=='':
@@ -174,7 +159,6 @@ def split_gene_fragment(GENE_Fragment):
     else:
         fragments=GENE_Fragment[1].split(';')
         return GENE_Fragment[0],[[int(eeach) for eeach in each.split(',')] for each in fragments]
-#10
 def show_fragment(LIBRARY_PATH,SEQ_SEQUENCES,Cell_Index=1,Gene_Index=1,Fragment_Index=1):
     Fragment_Index=Fragment_Index-1 #change the index to python index
     seq_name,fragement_list=split_gene_fragment(get_line_context(LIBRARY_PATH+str(Cell_Index),Gene_Index))
@@ -182,7 +166,6 @@ def show_fragment(LIBRARY_PATH,SEQ_SEQUENCES,Cell_Index=1,Gene_Index=1,Fragment_
     print(seq_name) #print seq name
     print(fragment_seq) #print seq
     print(len(fragment_seq)) #print seq length
-#add 4
 def list_insert(LIST,SEP):
     LIST_n=[]
     for i in range(len(LIST)):
@@ -190,7 +173,6 @@ def list_insert(LIST,SEP):
         LIST_n.append(SEP)
     LIST_n.pop()
     return LIST_n
-#3 changed
 def PCR_database(PCR_CONTROL_PATH,LIBRARY_PATH,CIRCLE=2):
     cell_list=os.listdir(LIBRARY_PATH)
     for each in cell_list:
@@ -208,7 +190,6 @@ def PCR_database(PCR_CONTROL_PATH,LIBRARY_PATH,CIRCLE=2):
             fw.writelines(pcr)
         fr.close()
         fw.close()
-#add 5
 def edit_pcr_control(PCR_CONTROL_PATH,NEW_VALUE,Cell_Index=1,Gene_Index=1,Fragment_Index=1):
     fr=open(PCR_CONTROL_PATH+str(Cell_Index),'r')
     lines=fr.readlines()
@@ -224,7 +205,6 @@ def edit_pcr_control(PCR_CONTROL_PATH,NEW_VALUE,Cell_Index=1,Gene_Index=1,Fragme
     fw=open(PCR_CONTROL_PATH+str(Cell_Index),'w')
     fw.writelines(lines)
     fw.close()
-#add 6
 def get_count_sum(PCR_Fragment):
     pcr_list=PCR_Fragment.replace('\n','').split('\t')
     if pcr_list[1]=='':  #if no fragment
@@ -232,7 +212,6 @@ def get_count_sum(PCR_Fragment):
     else:
         sub_pcr_frag=[int(each) for each in pcr_list[1].split(',')]
         return sum(sub_pcr_frag)
-#add 7:get the database information
 def get_search_key(PCR_CONTROL_PATH):
     cell_list=[int(each) for each in os.listdir(PCR_CONTROL_PATH)]
     cell_list.sort()
@@ -248,10 +227,8 @@ def get_search_key(PCR_CONTROL_PATH):
         fr.close()
         pcr_list.append(sub_pcr_list)
     return database_size,pcr_list
-#add 8
 def get_cell_count(PCR_LIST):
     return [sum(each) for each in PCR_LIST]
-#9 no change; niubi
 def find_expend_index(Database_Expend,Random_Number):
     Database_Expend=np.array(Database_Expend)
     index_i=1
@@ -266,7 +243,6 @@ def find_expend_index(Database_Expend,Random_Number):
         return index_i
     else:
         return index_j
-#14 changed all
 def get_frag_index(PCR_CONTROL_PATH,PCR_LIST,Random_Number):
     #find cell index
     cell_count_sum=get_cell_count(PCR_LIST)
@@ -281,7 +257,6 @@ def get_frag_index(PCR_CONTROL_PATH,PCR_LIST,Random_Number):
     fragment_count_sum=[int(each) for each in fragment_line.split('\t')[1].split(',')] #must not be empty fragment count
     fragment_index=find_expend_index(fragment_count_sum,Random_Number)
     return [cell_index,gene_index,fragment_index]
-#add 14.1
 def cultimate_list(LIST):
     CULM_LIST=[]
     for i in range(len(LIST)):
@@ -290,7 +265,6 @@ def cultimate_list(LIST):
             continue
         CULM_LIST.append(sum([CULM_LIST[(i-1)],LIST[i]]))
     return CULM_LIST
-#14.2
 def find_cumulate_index(Cumulative_List,Sorted_Index_List):
     Index=[]
     index_j=0
@@ -304,7 +278,6 @@ def find_cumulate_index(Cumulative_List,Sorted_Index_List):
                 break
         index_j=index_j+1
     return Index
-#14.3
 def find_cell_index(Cumulative_List,Sorted_Index_List):
     Index=[]
     index_j=0
@@ -319,7 +292,6 @@ def find_cell_index(Cumulative_List,Sorted_Index_List):
         print('\r'+'*'*(((index_j*100)//(len(Cumulative_List)-1))//2)+str(((index_j*100)//(len(Cumulative_List)-1)))+'%', end='')
         index_j=index_j+1
     return Index
-#14.5
 def find_gene_index(PCR_Cell_LIST,Cell_Count_cumuLIST,Cell_Index_LIST,LIBRARY_INDEX):
     sel_cell=list(Counter(Cell_Index_LIST).keys())
     sel_cell.sort()
@@ -345,7 +317,6 @@ def find_gene_index(PCR_Cell_LIST,Cell_Count_cumuLIST,Cell_Index_LIST,LIBRARY_IN
         #print the progress
         print('\r'+'*'*(((each_cell*100)//(sel_cell[-1]))//2)+str(((each_cell*100)//(sel_cell[-1])))+'%', end='')
     return gene_index
-#add 14.6
 def find_fragment_index_in_cell(PCR_LIST,PCR_CONTROL_PATH,CELL,SUB_LIBRARY_INDEX,SUB_GENE_INDEX):
     gene_index=[]
     sel_gene=[]
@@ -376,7 +347,6 @@ def find_fragment_index_in_cell(PCR_LIST,PCR_CONTROL_PATH,CELL,SUB_LIBRARY_INDEX
         fragment_index.extend(find_cumulate_index(cultimate_list(gene_index[index]),sub_lib_index))
         index=index+1
     return fragment_index
-#14.7
 def find_fragment_index(PCR_LIST,PCR_CONTROL_PATH,LIBRARY_INDEX,CELL_INDEX,GENE_INDEX,cell_count_culm):
     sel_cell=[]
     for each in CELL_INDEX:
@@ -406,7 +376,6 @@ def find_fragment_index(PCR_LIST,PCR_CONTROL_PATH,LIBRARY_INDEX,CELL_INDEX,GENE_
         index=index+1
         print('\r'+'*'*(((each_cell*100)//sel_cell[-1])//2)+str(((each_cell*100)//sel_cell[-1]))+'%', end='')
     return all_frag_index
-#14.8
 def get_all_Count_UMI(PCR_CONTROL_PATH,PCR_LIST,LIBRARY_INDEX):
     #
     print('Getting Cells cumulative count')
@@ -435,18 +404,14 @@ def get_all_Count_UMI(PCR_CONTROL_PATH,PCR_LIST,LIBRARY_INDEX):
     print('\n------Have Done!------')
     #
     return [list(each) for each in zip(cell_index_list,gene_index_list,fragment_index_list)]
-
-#23
 def random_seq(LENGTH):
     return ''.join([random.choice(['A','T','G','C']) for i in range(LENGTH)])
-#24
 def seq_distance(SEQ_1,SEQ_2):
     index=0
     for i in range(len(SEQ_1)):
         if SEQ_1[i]!=SEQ_2[i]:
             index=index+1
     return index
-#25
 def get_new_barcord(LENGTH,MIN_DISTANT,Barcord_Bank):
     random_barcord=random_seq(LENGTH)
     dis_in_seqs=seq_distance(random_barcord,Barcord_Bank[0])
@@ -464,7 +429,6 @@ def get_new_barcord(LENGTH,MIN_DISTANT,Barcord_Bank):
             return random_barcord
         else:
             return get_new_barcord(LENGTH,MIN_DISTANT,Barcord_Bank) #if not size up with the barcord in the bank, then get a new one
-#26
 def get_barcord_bank(LENGTH,MIN_DISTANT,BANK_SIZE):
     barcord_bank=[random_seq(LENGTH)] #get the first one
     i=1
@@ -472,7 +436,6 @@ def get_barcord_bank(LENGTH,MIN_DISTANT,BANK_SIZE):
         barcord_bank.append(get_new_barcord(LENGTH,MIN_DISTANT,barcord_bank))
         i=i+1
     return barcord_bank
-##27 changed all,every fragment before pcr have a random UMI(longer enough to unique but random)
 def get_UMI_bank(LIBRARY_PATH,UMI_PATH,UMI_Length):
     cells=os.listdir(LIBRARY_PATH)
     for each in cells:
@@ -490,16 +453,13 @@ def get_UMI_bank(LIBRARY_PATH,UMI_PATH,UMI_Length):
             fw.writelines(umi_list)
         fr.close()
         fw.close()
-#add 8:get the umi code
 def get_UMI_barcord(UMI_PATH,Full_Index):
     umi_line=get_line_context(UMI_PATH+str(Full_Index[0]),Full_Index[1])
     umi_line=umi_line.split('\t')[1].split(',')
     return ''.join([['A','T','G','C'][int(b)] for b in list(umi_line[Full_Index[2]-1])])
-#13
 def get_library_index(Database_Size,Library_Size):
     library_index=random.sample(range(Database_Size),Library_Size)
     return [i+1 for i in library_index]
-#11 changed
 def get_fragment_seq(LIBRARY_PATH,SEQ_SEQUENCES,Full_Index):
     fragment_index=Full_Index[2]-1 #change the index to python index
     Cell_Index=Full_Index[0]
@@ -507,17 +467,14 @@ def get_fragment_seq(LIBRARY_PATH,SEQ_SEQUENCES,Full_Index):
     seq_name,fragement_list=split_gene_fragment(get_line_context(LIBRARY_PATH+str(Cell_Index),Gene_Index))
     fragment_seq=SEQ_SEQUENCES[Gene_Index-1][fragement_list[fragment_index][0]:(1+fragement_list[fragment_index][1])]
     return fragment_seq
-#21
 def get_complimentary_seq(SEQ_1):
     SEQ_2=[['T','A','C','G'][['A','T','G','C'].index(each)] for each in SEQ_1]
     SEQ_2=''.join(SEQ_2)
     return SEQ_2[::-1]
-#29
 def get_full_seq(LIBRARY_PATH,SEQ_SEQUENCES,Full_Index,Cell_Barcord,UMI_PATH,ADAPTOR):
     cb=Cell_Barcord[Full_Index[0]-1]
     ub=get_UMI_barcord(UMI_PATH,Full_Index)
     return ADAPTOR+cb[:9]+'ACTGGCCTGCGA'+cb[9:18]+'GGTAGCGGCGACA'+cb[18:27]+ub+'T'+get_fragment_seq(LIBRARY_PATH,SEQ_SEQUENCES,Full_Index)+get_complimentary_seq(ADAPTOR)
-#28 no change
 def decide_where(Sparse_Count_List,LIBRARY_INDEX): #LIBRARY_INDEX:[cell index, gene index]
     if len(Sparse_Count_List)==0:
         return 'new'
@@ -526,7 +483,6 @@ def decide_where(Sparse_Count_List,LIBRARY_INDEX): #LIBRARY_INDEX:[cell index, g
         return index_bank.index(LIBRARY_INDEX)
     else:
         return 'new'
-#30
 def get_one_read(FULL_SEQ,STRAND,START_RANGE=[0,10],LENGTH=125):
     start_position=random.choice(range((START_RANGE[0]),(START_RANGE[1])))
     end_position=min([(start_position+LENGTH),len(FULL_SEQ)])
@@ -536,10 +492,8 @@ def get_one_read(FULL_SEQ,STRAND,START_RANGE=[0,10],LENGTH=125):
         return get_complimentary_seq(FULL_SEQ)[start_position:end_position]
     else:
         print('input the right strand')
-#15
 def random_error():
     return random.randrange(0, 10, 1)/1000
-#16
 def what_mutation(OLD_BASE,Random_Number,Mutant_Profile):
     Random_Number=Random_Number-(1-np.sum(np.array(Mutant_Profile))) #minus the probability no mutant
     index=0
@@ -551,7 +505,6 @@ def what_mutation(OLD_BASE,Random_Number,Mutant_Profile):
         return ['','A','T','G','C'][index]
     else: #insert mutant
         return OLD_BASE+['','-','-','-','-','A','T','G','C'][index]
-#17
 def get_base(OLD_BASE,POSITION,Error_Profile,STRAND):
     STRAND=STRAND-1
     POSITION=POSITION-1
@@ -563,7 +516,6 @@ def get_base(OLD_BASE,POSITION,Error_Profile,STRAND):
     else:
         mutant_index=1
         return what_mutation(OLD_BASE,random_number,Error_Profile[STRAND][j][POSITION]),mutant_index
-#18
 def base_quality(Quality):
     Quality=Quality+round(random.normalvariate(0,0.5)) #a normal distribution with mean=0,sd=2
     if Quality<33:
@@ -572,7 +524,6 @@ def base_quality(Quality):
         return chr(74)
     else:
         return chr(Quality)
-#19
 def get_base_quality(NEW_BASE,POSITION,STRAND,Mutant_Index,Quality_Profile):
     if Mutant_Index==1:
         if NEW_BASE=='':
@@ -585,10 +536,8 @@ def get_base_quality(NEW_BASE,POSITION,STRAND,Mutant_Index,Quality_Profile):
         STRAND=STRAND-1
         POSITION=POSITION-1
         return base_quality(Quality_Profile[STRAND][['A','T','G','C'].index(NEW_BASE)][POSITION])
-#20
 def random_quality_profile(): #low-high-middle
     return [random.choice(range(33,51)) for i in range(25)]+[75 for i in range(75)]+[random.choice(range(40,66)) for i in range(25)]
-#22
 def get_seq_read(OLD_SEQUENCE,STRAND,Error_Profile,Quality_Profile):
     new_sequence=''
     quality_score=''
@@ -598,13 +547,11 @@ def get_seq_read(OLD_SEQUENCE,STRAND,Error_Profile,Quality_Profile):
         new_sequence=new_sequence+new_sub
         quality_score=quality_score+get_base_quality(new_sub,position,STRAND,mutant_index,Quality_Profile)
     return [new_sequence,quality_score]
-#add 9
 def get_seq_title(SEQ_NAMES,Cell_Barcord,Full_Index,STRAND,Random_Index):
     if STRAND==1:
         return '@RDF'+str(Random_Index)+'_'+SEQ_NAMES[Full_Index[1]-1]+':'+Cell_Barcord[Full_Index[0]-1]
     else:
         return '@RDR'+str(Random_Index)+'_'+SEQ_NAMES[Full_Index[1]-1]+':'+Cell_Barcord[Full_Index[0]-1]
-#add 15
 class myThread (threading.Thread):
     def __init__(self, name, q):
         threading.Thread.__init__(self,name=name)
@@ -613,8 +560,6 @@ class myThread (threading.Thread):
         print (self.name+' start working now!')
         process_data(self.name, self.q) #in quene, will not stop
         print ('\n'+self.name+' have finish his work!')
-#add 16.2
-#add 16.3
 def process_data(threadName,q):
     FILE=simulation_frag_to_file.FILE_PATH+'/'+simulation_frag_to_file.FILE_NAME+'_line'+threadName.split('-')[-1]
     flush_empty_index=0
@@ -660,7 +605,6 @@ def process_data(threadName,q):
             write_flush_1=[]
             write_flush_2=[]
             flush_empty_index=0
-#add 17
 def simulation_frag_to_file(FILE_PATH,FILE_NAME,SEQUENCES,SEQUENCE_NAMES,ADAPTOR,Cell_Barcord,ERROR_Profile,QUALITY_Profile,LIBRARY_INDEX_Iterm,THREAD_Number):
     #share the variable
     simulation_frag_to_file.FILE_PATH=FILE_PATH
@@ -707,7 +651,6 @@ def simulation_frag_to_file(FILE_PATH,FILE_NAME,SEQUENCES,SEQUENCE_NAMES,ADAPTOR
     for t in threads:
         t.join()
     print ("The simulation progress is done!")
-#add 18
 def get_full_seq2(SEQ_SEQUENCES,ADAPTOR,Cell_Barcord,Fragment_bed_full):
     cell_index=Fragment_bed_full[0][0]
     gene_index=Fragment_bed_full[0][1]
@@ -715,23 +658,19 @@ def get_full_seq2(SEQ_SEQUENCES,ADAPTOR,Cell_Barcord,Fragment_bed_full):
     cb=Cell_Barcord[cell_index-1]
     ub=''.join([['A','T','G','C'][int(b)] for b in list(Fragment_bed_full[2])])
     return cb+ub+'TTTTTTTTTTTTTTTTTT'+get_complimentary_seq(SEQ_SEQUENCES[gene_index-1][fragment_bed[0]:(1+fragment_bed[1])])
-#add 19 former is wrong
 def get_seq_title2(SEQ_NAMES,Cell_Barcord,Fragment_bed_full,STRAND):
     if STRAND==1:
         return '@RD_'+str(Fragment_bed_full[1][0])+';'+str(Fragment_bed_full[1][1])+'_'+SEQ_NAMES[Fragment_bed_full[0][1]-1]+':'+Cell_Barcord[Fragment_bed_full[0][0]-1]
     else:
         return '@RD_'+str(Fragment_bed_full[1][0])+';'+str(Fragment_bed_full[1][1])+'_'+SEQ_NAMES[Fragment_bed_full[0][1]-1]+':'+Cell_Barcord[Fragment_bed_full[0][0]-1]
-#add 20
 def split_gene_fragment2(GENE_Fragment,fragment_list):
     GENE_Fragment=GENE_Fragment.split('\t')
     fragments=[[int(eeach) for eeach in each.split(',')] for each in GENE_Fragment[1].split(';')]
     return [fragments[i-1] for i in fragment_list]
-#add 21
 def split_UMI_fragment(UMI_line,fragment_list):
     UMI_line=UMI_line.replace('\n','').split('\t')
     fragments=UMI_line[1].split(',')
     return [fragments[i-1] for i in fragment_list]
-#add 22
 def get_fragment_seq2(LIBRARY_PATH,UMI_PATH,Sub_Count_Sparse):
     #split the count sparse
     cell_index=[]
