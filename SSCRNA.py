@@ -717,3 +717,42 @@ def get_fragment_seq2(LIBRARY_PATH,UMI_PATH,Sub_Count_Sparse):
         print('\r'+'*'*(((i*100)//(len(sel_cell)-1))//2)+str(((i*100)//(len(sel_cell)-1)))+'%', end='')
     print('\nHave Done!')
     return fragment_bed
+#
+def Read_Error(ERROR_PATH):
+    error_profile_r=[]
+    for i in range(2):
+        error_profile_r.append([])
+        for j in range(4):
+            error_profile_r[i].append([])
+            for k in range(125):
+                error_profile_r[i][j].append([])
+                for b in range(9):
+                    error_profile_r[i][j][k].append('')
+    with open(ERROR_PATH,'r') as f:
+        line=f.readline()
+        for each in f:
+            line=each.replace('\n','').split('\t')
+            j=['A','T','G','C'].index(line[1])
+            k=int(line[0])-1
+            b=['-','-A','-T','-G','-C','+A','+T','+G','+C'].index(line[2])
+            error_profile_r[0][j][k][b]=float(line[3])
+            error_profile_r[1][j][k][b]=float(line[4])
+    return error_profile_r
+#
+def Read_Quality(QUALITY_PATH):
+    quality_profile_r=[]
+    for i in range(2):
+        quality_profile_r.append([])
+        for j in range(4):
+            quality_profile_r[i].append([])
+            for k in range(125):
+                quality_profile_r[i][j].append([])
+    with open('G:/home/simulation_scRNA_data/gitup/Quality_Profile.txt','r') as f:
+        line=f.readline()
+        for each in f:
+            line=each.replace('\n','').split('\t')
+            j=['A','T','G','C'].index(line[1])
+            k=int(line[0])-1
+            quality_profile_r[0][j][k]=int(line[2])
+            quality_profile_r[1][j][k]=int(line[3])
+    return quality_profile_r
