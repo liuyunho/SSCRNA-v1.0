@@ -1,20 +1,26 @@
 # SSCRNA-v1.0
 single cell sequencing simulation program  
+
+## Working Directory
+Set up a working directory (WorkPath/), Create several new folders (fragment_data, pcr_control_data, umi_data, Simulation_Path).  
+Put the files (Test_Data.txt, Error_Profile.txt, Quality_Profile.txt) in the working directory.
+
+## Running the main file (Main.py)
 As recorded in Main.py file:
 
-## Import packages:
-import sys
-sys.path.append(r"/SSCRNA_PATH")
-import SSCRNA as sc
-import time
-import os
-import pickle
+### Import packages:
+import sys  
+sys.path.append('WorkPath/')  
+import SSCRNA as sc  
+import time  
+import os  
+import pickle  
 
-## read the cell specific profile
+### read the cell specific profile
 filename = r'/Test_Data_PATH/Test_Data.txt'
 cell_pro,gene_na=sc.Read_Gene_Table(filename)
 
-## get the seq of genes (f_seq variable)
+### get the seq of genes (f_seq variable)
 ### the refference seq download
 #ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.pc_transcripts.fa.gz
 f=r"gencode.v32.pc_transcripts.fa"
