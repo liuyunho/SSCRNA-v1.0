@@ -1,5 +1,5 @@
 # SSCRNA-v1.0
-single cell sequencing simulation program
+single cell sequencing simulation program\n
 As recorded in Main.py file:
 
 ## Import packages:
