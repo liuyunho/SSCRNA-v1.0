@@ -63,9 +63,15 @@ sc.get_UMI_bank(frag_list_path,umi_path,8)
 cell_barcord=sc.get_barcord_bank(27,2,22)  
 #### save some data in pickle data
 xc=[cell_barcord, f_na, f_seq]  
-with open('WorkPath/'+'cell_barcord_gene_name_seq.pickle', 'wb') as handle: 
+with open('WorkPath/'+'cell_barcord_gene_name_seq.pickle', 'wb') as handle:   
     pickle.dump(xc, handle)  
 
 ## run the simulation program (python simulation_in_preDatabase.py [number of reads] working_path process)
 make sure using linux system, and run the command as follow (number of reads = 200, process = 5):   
 python simulation_in_preDatabase.py 200 'WorkPath/' 5  
+
+## running process showing as follow
+![Select process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Select process.png)  
+![Writing process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Writing process.jpg)  
+## The simulation data will be located in the ‘Simulation_Path’ folder
+![simulation data](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Writing process.jpg)
