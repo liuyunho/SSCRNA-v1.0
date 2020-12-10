@@ -71,7 +71,7 @@ make sure using linux system, and run the command as follow (number of reads = 2
 python simulation_in_preDatabase.py 200 'WorkPath/' 5  
 
 ## running process showing as follow
-![Select process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Select process.png)  
-![Writing process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Writing process.jpg)  
+![Select process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Select%20process.png)  
+![Writing process](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Writing%20process.jpg)  
 ## The simulation data will be located in the ‘Simulation_Path’ folder
-![simulation data](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/Writing process.jpg)
+![simulation data](https://github.com/liuyunho/SSCRNA-v1.0/edit/main/simulation%20data.jpg)
